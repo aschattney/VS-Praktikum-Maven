@@ -45,7 +45,7 @@ public class Application {
         //userInputProcessor.processSync();
 
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(1111).build();
-        PrinterResource printerResource = new PrinterResource(printerClient);
+        PrinterResource printerResource = new PrinterResource(printerClient, printJobExecutor);
         MaterialResource materialResource = new MaterialResource(materialClient);
         ResourceConfig config = new ResourceConfig().register(printerResource).register(materialResource); // interner aufbau vom rest-server
         HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);

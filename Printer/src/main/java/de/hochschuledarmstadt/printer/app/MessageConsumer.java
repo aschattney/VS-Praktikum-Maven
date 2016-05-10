@@ -48,11 +48,11 @@ public class MessageConsumer implements IMessageConsumer{
     }
 
     private void simulateCommand() {
-        /*try {
+        try {
             Thread.sleep(PRINTHEAD_COMMAND_SIMULATE_TIMEOUT);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private void sendMessage(IMessageSender messageSender, String message){

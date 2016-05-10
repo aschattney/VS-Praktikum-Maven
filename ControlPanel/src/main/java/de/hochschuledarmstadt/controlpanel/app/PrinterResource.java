@@ -3,28 +3,29 @@ package de.hochschuledarmstadt.controlpanel.app;
 
 import com.google.gson.Gson;
 import de.hochschuledarmstadt.client.ISocketClient;
+import de.hochschuledarmstadt.model.PrintJob;
 import de.hochschuledarmstadt.model.request.PrintheadStatusRequest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("printer")
 public class PrinterResource {
 
     private ISocketClient printer;
+    private PrintJobExecutor printJobExecutor;
 
-    public PrinterResource(ISocketClient printer) {
+    public PrinterResource(ISocketClient printer, PrintJobExecutor printJobExecutor) {
         this.printer = printer;
+        this.printJobExecutor = printJobExecutor;
     }
 
     @GET
     @Path("/status")
-    @Produces("text/plain")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public String Status(){
         Gson gson = new Gson();
         PrintheadStatusRequest request = new PrintheadStatusRequest();
@@ -36,6 +37,27 @@ public class PrinterResource {
             e.printStackTrace();
         }
         return jsonObject.toString();
+    }
+
+    @GET
+    @Path("/job/{name}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public String Job(@PathParam("name") String name){
+
+        String message = "";
+        try {
+            PrintJob printJob = PrintPlanJSONFileReader.readFile(name + ".json");
+            if(printJobExecutor.isPrinting())
+                message = "Der Auftrag kommt in die Warteschlange";
+            else
+                message = "Der Auftrag wird jetzt ausgeführt.";
+
+            printJobExecutor.addPrintJob(printJob);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+            return message;
     }
 
 

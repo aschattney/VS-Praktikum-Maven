@@ -12,6 +12,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("material")
@@ -25,7 +26,7 @@ public class MaterialResource {
 
     @GET
     @Path("/status")
-    @Produces("text/plain")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public String Status(){
         Gson gson = new Gson();
         MaterialStatusRequest request = new MaterialStatusRequest();
