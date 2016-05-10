@@ -14,13 +14,16 @@ public class MessageConsumer implements IMessageConsumer {
 
     private static final String KEY_TYPE = "type";
 
-    private Material material = new Material(100000);
+    private final Material material;
     private Gson gson = new Gson();
 
     private void onError(IOException e) {
         e.printStackTrace();
     }
 
+    public  MessageConsumer(Material material){
+        this.material = material;
+    }
 
     @Override
     public void consumeMessage(IMessageSender messageSender, JSONObject message) {
@@ -74,5 +77,9 @@ public class MessageConsumer implements IMessageConsumer {
 
     public void refillMaterial() {
         material.refill();
+    }
+
+    public void empty() {
+        material.empty();
     }
 }

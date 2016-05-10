@@ -11,11 +11,7 @@ public class Application {
 
         boolean performanceTestEnabled = shouldPerformPerformanceTest(args);
 
-        int printheadCommandSimulationEnabled = !performanceTestEnabled
-                                                ? MessageConsumer.ENABLE_SIMULATE_PRINTHEAD_COMMAND
-                                                : MessageConsumer.DISABLE_SIMULATE_PRINTHEAD_COMMAND;
-
-        MessageConsumer messageConsumer = new MessageConsumer(printheadCommandSimulationEnabled);
+        MessageConsumer messageConsumer = new MessageConsumer();
         PrinterServerExecutor executor = new PrinterServerExecutor(args, messageConsumer);
         Executors.newSingleThreadExecutor().submit(executor);
 
