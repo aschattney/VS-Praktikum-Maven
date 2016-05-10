@@ -22,28 +22,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="SocketTransport" />
-      </profile>
-      <profile default="false" name="Annotation profile for Printer" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="Printer" />
-      </profile>
-      <profile default="false" name="Annotation profile for Material" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="Material" />
-      </profile>
-      <profile default="false" name="Annotation profile for ControlPanel" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="ControlPanel" />
+        <module name="Material" />
+        <module name="Printer" />
+        <module name="SocketTransport" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

@@ -5,29 +5,28 @@
  */
 package de.hochschuledarmstadt.controlpanel.app;
 
+import com.sun.net.httpserver.HttpServer;
 import de.hochschuledarmstadt.client.ISocketClient;
 import de.hochschuledarmstadt.client.SocketClientFactory;
 import de.hochschuledarmstadt.config.Credential;
 import de.hochschuledarmstadt.config.CredentialParser;
+import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 import java.util.concurrent.Executors;
 
 public class Application {
 
-    private static boolean performanceTestEnabled = false;
-
     private static final int DEFAULT_PRINTER_PORT = 3333;
     private static final int DEFAULT_MATERIAL_PORT = 5555;
-    private static final String DEFAULT_IP = "127.0.0.1";
 
-    private static final String MODULE_PRINTER = "printer";
+    private static final String DEFAULT_IP = "127.0.0.1";
+    public static final String MODULE_PRINTER = "printer";
     private static final String MODULE_MATERIAL = "material";
 
-    private static final String ARG_PERFORMANCETEST = "PERFORMANCETEST";
-
     public static void main(String[] args){
-
-        performanceTestEnabled = shouldPerformPerformanceTest(args);
 
         // Build credentials. A Credential consists of the used protocol, ip adress and port
         Credential printerCredential = CredentialParser.parse(MODULE_PRINTER, args, Credential.PROTOCOL_TCP, DEFAULT_IP, DEFAULT_PRINTER_PORT);
@@ -41,26 +40,16 @@ public class Application {
         PrintJobExecutor printJobExecutor = new PrintJobExecutor(System.out, printerClient, materialClient);
         Executors.newSingleThreadExecutor().submit(printJobExecutor);
 
-        IApplicationProcessor applicationProcessor = buildApplicationProcessor(printerClient, materialClient, printJobExecutor);
-        applicationProcessor.processSync();
+        // Transforms user input into message requests and sends those requests to the server
+        ApplicationProcessor userInputProcessor = new ApplicationProcessor(System.in, System.out, printJobExecutor, materialClient);
+        //userInputProcessor.processSync();
 
-    }
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(1111).build();
+        PrinterResource printerResource = new PrinterResource(printerClient);
+        MaterialResource materialResource = new MaterialResource(materialClient);
+        ResourceConfig config = new ResourceConfig().register(printerResource).register(materialResource); // interner aufbau vom rest-server
+        HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);
 
-    private static IApplicationProcessor buildApplicationProcessor(ISocketClient printerClient, ISocketClient materialClient, PrintJobExecutor printJobExecutor) {
-        IApplicationProcessor applicationProcessor;
-        if (!performanceTestEnabled)
-            applicationProcessor = new ApplicationProcessor(System.in, System.out, printJobExecutor, materialClient);
-        else
-            applicationProcessor = new PerformanceTestProcessor(materialClient, printerClient);
-        return applicationProcessor;
-    }
-
-    private static boolean shouldPerformPerformanceTest(String[] args) {
-        for (String arg : args){
-            if (arg.toUpperCase().equals(ARG_PERFORMANCETEST))
-                return true;
-        }
-        return false;
     }
 
 }

@@ -14,47 +14,45 @@ public class MessageConsumer implements IMessageConsumer {
 
     private static final String KEY_TYPE = "type";
 
-    private final Material material;
+    private Material material = new Material(100000);
     private Gson gson = new Gson();
 
     private void onError(IOException e) {
         e.printStackTrace();
     }
 
-    public MessageConsumer(Material material){
-        this.material = material;
-    }
 
     @Override
     public void consumeMessage(IMessageSender messageSender, JSONObject message) {
 
         if (isColorStatusRequest(message)){
-            sendColorStatusResponse(messageSender, message);
+
+            ColorStatusRequest statusRequest = gson.fromJson(message.toString(), ColorStatusRequest.class);
+            final RequiredMaterial requiredMaterial = statusRequest.getRequiredMaterial();
+            boolean colorAvailable = material.isEnoughColorAvailable(requiredMaterial);
+            String status = colorAvailable ? ColorStatusResponse.STATUS_OK : ColorStatusResponse.STATUS_MISSING;
+            ColorStatusResponse response = new ColorStatusResponse(status, material.getColorFillLevel());
+            sendMessage(messageSender, response.toJSON());
+
         }else if(isUseColorRequest(message)){
-            sendUseColorResponse(messageSender, message);
+
+            UseColorRequest useColorRequest = gson.fromJson(message.toString(), UseColorRequest.class);
+            final String color = useColorRequest.getColor();
+            material.use(color);
+            UseColorResponse response = new UseColorResponse(UseColorResponse.STATUS_OK);
+            sendMessage(messageSender, response.toJSON());
+
+        }else if(isMaterialStatusRequest(message)){
+
+            RequiredMaterial currentFillLevel = material.getColorFillLevel();
+            MaterialStatusResponse materialStatusResponse = new MaterialStatusResponse(currentFillLevel);
+            sendMessage(messageSender, materialStatusResponse.toJSON());
         }
 
     }
 
-    private void sendUseColorResponse(IMessageSender messageSender, JSONObject message) {
-        UseColorRequest useColorRequest = convertJsonToPojo(message.toString(), UseColorRequest.class);
-        final String color = useColorRequest.getColor();
-        material.use(color);
-        UseColorResponse response = new UseColorResponse(UseColorResponse.STATUS_OK);
-        sendMessage(messageSender, response.toJSON());
-    }
-
-    private void sendColorStatusResponse(IMessageSender messageSender, JSONObject message) {
-        ColorStatusRequest statusRequest = convertJsonToPojo(message.toString(), ColorStatusRequest.class);
-        final RequiredMaterial requiredMaterial = statusRequest.getRequiredMaterial();
-        boolean colorAvailable = material.isEnoughColorAvailable(requiredMaterial);
-        String status = colorAvailable ? ColorStatusResponse.STATUS_OK : ColorStatusResponse.STATUS_MISSING;
-        ColorStatusResponse response = new ColorStatusResponse(status, material.getColorFillLevel());
-        sendMessage(messageSender, response.toJSON());
-    }
-
-    private <T> T convertJsonToPojo(String message, Class<T> clazz){
-        return gson.fromJson(message, clazz);
+    private boolean isMaterialStatusRequest(JSONObject message) {
+        return message.getString(KEY_TYPE).equals(MaterialStatusRequest.MATERIAL_STATUS_REQUEST);
     }
 
     private boolean isUseColorRequest(JSONObject message) {
@@ -73,11 +71,8 @@ public class MessageConsumer implements IMessageConsumer {
         }
     }
 
+
     public void refillMaterial() {
         material.refill();
-    }
-
-    public void empty() {
-        material.empty();
     }
 }

@@ -25,6 +25,12 @@
             <groupId>de.hochschuledarmstadt</groupId>
             <artifactId>SocketTransport</artifactId>
             <version>1.0-SNAPSHOT</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jdk-http</artifactId>
+            <version>2.22.2</version>
         </dependency>
     </dependencies>
 
