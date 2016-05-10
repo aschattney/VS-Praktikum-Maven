@@ -1,4 +1,4 @@
-# VS-Praktikum - Aufgabe 1
+# VS-Praktikum-Maven
 
 # JAR Dateien
 
@@ -54,4 +54,3 @@ java -jar Printer.jar tcp://127.0.0.1:5555 performancetest
 java -jar Material.jar tcp://127.0.0.1:6666 performancetest
 java -jar ControlPanel.jar printer=tcp://127.0.0.1:5555 material=tcp://127.0.0.1:6666 performancetest
 ```
-
