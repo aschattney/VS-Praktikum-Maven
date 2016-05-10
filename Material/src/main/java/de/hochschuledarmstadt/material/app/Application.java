@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 public class Application {
 
-    private static final int DEFAULT_FILL_LEVEL = 5;
+    private static final int DEFAULT_FILL_LEVEL = 5000;
     private static final int PERFORMANCE_TEST_FILL_LEVEL = 1000000000;
 
     private static final String ARG_PERFORMANCETEST = "PERFORMANCETEST";
