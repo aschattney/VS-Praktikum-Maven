@@ -22,10 +22,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="ControlPanel" />
-        <module name="Material" />
-        <module name="Printer" />
-        <module name="SocketTransport" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
