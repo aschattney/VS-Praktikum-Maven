@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SocketTransport">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../SocketTransport/out/artifacts/SocketTransport_jar/SocketTransport.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
