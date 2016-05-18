@@ -19,8 +19,8 @@ public class Application {
                 case 1: {
                     try {
                         String ipAndPort = getUrlByIdFromUserInput(sc);
-                        PrinterService printerService = new PrinterService(ipAndPort);
-                        String response = printerService.requestPrinterStatus();
+                        JobService jobService = new JobService(ipAndPort, "nail");
+                        String response = jobService.sendJob();
                         System.out.println(response);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -28,7 +28,14 @@ public class Application {
                     break;
                 }
                 case 2: {
-                    String ipAndPort = getUrlByIdFromUserInput(sc);
+                    try {
+                        String ipAndPort = getUrlByIdFromUserInput(sc);
+                        PrinterService printerService = new PrinterService(ipAndPort);
+                        String response = printerService.requestPrinterStatus();
+                        System.out.println(response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
                 case 3: {
