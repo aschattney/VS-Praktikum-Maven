@@ -66,7 +66,7 @@ public class Application {
 
     private static void buildIdToUrlMap() {
         idToUrlMap.put(1, "http://127.0.0.1:1111");
-        idToUrlMap.put(2, "http://127.0.0.1:2222");
+        idToUrlMap.put(2, "http://127.0.0.1:15000");
     }
 
     private static void printMenu() {

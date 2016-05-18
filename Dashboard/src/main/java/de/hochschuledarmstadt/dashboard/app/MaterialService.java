@@ -6,11 +6,6 @@ import com.sun.jersey.api.client.WebResource;
 
 public class MaterialService extends HttpService {
 
-
-    public MaterialService(String ip, int port) {
-        super(ip, port);
-    }
-
     public MaterialService(String ipAndPort) {
         super(ipAndPort);
     }

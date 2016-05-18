@@ -8,10 +8,6 @@ import com.sun.org.apache.xml.internal.serialize.Printer;
 
 public class PrinterService extends HttpService {
 
-    public PrinterService(String ip, int port) {
-        super(ip, port);
-    }
-
     public PrinterService(String ipAndPort){
         super(ipAndPort);
     }

@@ -5,18 +5,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import javax.xml.ws.http.HTTPException;
-
 public abstract class HttpService {
 
-    private final String url;
-
-    public HttpService(String ip, int port){
-        this.url = String.format("%s:%s/%s", ip, port, getHttpResource());
-    }
+    public static final int TIMEOUT = 8000;
+    private String ipAndPort;
 
     public HttpService(String ipAndPort){
-        this.url = String.format("%s/%s", ipAndPort, getHttpResource());
+        this.ipAndPort = ipAndPort;
     }
 
     protected abstract ClientResponse performHttpRequest(WebResource.Builder webResource);
@@ -24,10 +19,12 @@ public abstract class HttpService {
 
     protected String execute() throws Exception{
 
+        String url = String.format("%s/%s", ipAndPort, getHttpResource());
+
         Client client = Client.create();
-
+        client.setConnectTimeout(TIMEOUT);
+        client.setReadTimeout(TIMEOUT);
         WebResource webResource = client.resource(url);
-
         ClientResponse response = performHttpRequest(webResource.accept("application/json"));
 
         if (response.getStatus() >= 400) {

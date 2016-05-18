@@ -7,11 +7,6 @@ public class JobService extends HttpService{
 
     private final String jobName;
 
-    public JobService(String ip, int port, String jobName) {
-        super(ip, port);
-        this.jobName = jobName;
-    }
-
     public JobService(String ipAndPort, String jobName) {
         super(ipAndPort);
         this.jobName = jobName;
@@ -24,7 +19,7 @@ public class JobService extends HttpService{
 
     @Override
     protected String getHttpResource() {
-        return "printer/job";
+        return "printer/job/" + jobName;
     }
 
     public String sendJob() throws Exception {

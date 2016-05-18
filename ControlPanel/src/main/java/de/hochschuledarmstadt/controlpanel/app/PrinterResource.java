@@ -39,7 +39,7 @@ public class PrinterResource {
         return jsonObject.toString();
     }
 
-    @GET
+    @POST
     @Path("/job/{name}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public String Job(@PathParam("name") String name){

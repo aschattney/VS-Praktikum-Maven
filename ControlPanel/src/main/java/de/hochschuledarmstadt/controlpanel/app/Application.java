@@ -28,6 +28,21 @@ public class Application {
 
     public static void main(String[] args){
 
+        int restPort = 1111;
+
+        for (String command : args) {
+            try {
+                String[] pair = command.split("=");
+                if (pair[0].equals("port")) {
+                    restPort = Integer.parseInt(pair[1].trim());
+                    break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
         // Build credentials. A Credential consists of the used protocol, ip adress and port
         Credential printerCredential = CredentialParser.parse(MODULE_PRINTER, args, Credential.PROTOCOL_TCP, DEFAULT_IP, DEFAULT_PRINTER_PORT);
         Credential materialCredential = CredentialParser.parse(MODULE_MATERIAL, args, Credential.PROTOCOL_TCP, DEFAULT_IP, DEFAULT_MATERIAL_PORT);
@@ -44,7 +59,7 @@ public class Application {
         ApplicationProcessor userInputProcessor = new ApplicationProcessor(System.in, System.out, printJobExecutor, materialClient);
         //userInputProcessor.processSync();
 
-        URI baseUri = UriBuilder.fromUri("http://localhost/").port(1111).build();
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(restPort).build();
         PrinterResource printerResource = new PrinterResource(printerClient, printJobExecutor);
         MaterialResource materialResource = new MaterialResource(materialClient);
         ResourceConfig config = new ResourceConfig().register(printerResource).register(materialResource); // interner aufbau vom rest-server
