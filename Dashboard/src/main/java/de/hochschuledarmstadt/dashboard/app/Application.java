@@ -39,7 +39,14 @@ public class Application {
                     break;
                 }
                 case 3: {
-                    String ipAndPort = getUrlByIdFromUserInput(sc);
+                    try {
+                        String ipAndPort = getUrlByIdFromUserInput(sc);
+                        MaterialService materialService = new MaterialService(ipAndPort);
+                        String response = materialService.requestMaterialStatus();
+                        System.out.println(response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
 
@@ -84,7 +91,7 @@ public class Application {
 
     private static String joinIdsToCommaSeparatedString(List<Integer> ids) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ids.size(); i++){
+        for (int i = 0; i < ids.size(); i++) {
             sb.append(ids.get(i));
             if (i < ids.size() - 1)
                 sb.append(", ");
@@ -94,7 +101,7 @@ public class Application {
 
     private static List<Integer> buildIdList() {
         List<Integer> ids = new ArrayList<Integer>();
-        for (Map.Entry<Integer, String> entry : idToUrlMap.entrySet()){
+        for (Map.Entry<Integer, String> entry : idToUrlMap.entrySet()) {
             ids.add(entry.getKey());
         }
         return ids;
