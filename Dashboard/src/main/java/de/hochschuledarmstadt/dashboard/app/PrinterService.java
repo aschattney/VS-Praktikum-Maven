@@ -3,35 +3,31 @@ package de.hochschuledarmstadt.dashboard.app;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.org.apache.xml.internal.serialize.Printer;
 
-public class PrinterService {
+public class PrinterService extends HttpService {
 
-    public static String getPrinterStatus(){
-        try {
+    public PrinterService(String ip, int port) {
+        super(ip, port);
+    }
 
-            Client client = Client.create();
+    public PrinterService(String ipAndPort){
+        super(ipAndPort);
+    }
 
-            WebResource webResource = client
-                    .resource("http://localhost:1111/printer/status");
+    @Override
+    protected ClientResponse performHttpRequest(WebResource.Builder webResource) {
+        return webResource.get(ClientResponse.class);
+    }
 
-            ClientResponse response = webResource.accept("application/json")
-                    .get(ClientResponse.class);
+    @Override
+    protected String getHttpResource() {
+        return "printer/status";
+    }
 
-            if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + response.getStatus());
-            }
-
-            String output = response.getEntity(String.class);
-
-            return output;
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-        return null;
+    public String requestPrinterStatus() throws Exception {
+        return execute();
     }
 
 }
