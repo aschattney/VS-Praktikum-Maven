@@ -9,9 +9,13 @@ public abstract class HttpService {
 
     public static final int TIMEOUT = 8000;
     private String ipAndPort;
+    private Client client;
 
     public HttpService(String ipAndPort){
         this.ipAndPort = ipAndPort;
+        client = Client.create();
+        client.setConnectTimeout(TIMEOUT);
+        client.setReadTimeout(TIMEOUT);
     }
 
     protected abstract ClientResponse performHttpRequest(WebResource.Builder webResource);
@@ -20,10 +24,6 @@ public abstract class HttpService {
     protected String execute() throws Exception{
 
         String url = String.format("%s/%s", ipAndPort, getHttpResource());
-
-        Client client = Client.create();
-        client.setConnectTimeout(TIMEOUT);
-        client.setReadTimeout(TIMEOUT);
         WebResource webResource = client.resource(url);
         ClientResponse response = performHttpRequest(webResource.accept("application/json"));
 

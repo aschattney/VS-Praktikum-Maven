@@ -1,6 +1,8 @@
 package de.hochschuledarmstadt.dashboard.app;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Application {
 
@@ -12,6 +14,8 @@ public class Application {
         printMenu();
         Scanner sc = new Scanner(System.in);
         boolean isRunning = true;
+
+        //performanceTest();
 
         while (isRunning) {
             int eingabe = sc.nextInt();
@@ -57,6 +61,19 @@ public class Application {
 
         }
 
+    }
+
+    private static void performanceTest() {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        for (int id = 1 ; id <= 2; id++){
+            executorService.submit(new PerformanceTest(idToUrlMap.get(id), new PerformanceTest.Callback() {
+
+                public void onPerformanceTestCompleted(double duration, long byteCount) {
+                    System.out.println(String.format("Dauer: %s, Anzahl: %s", duration, byteCount));
+                }
+
+            }));
+        }
     }
 
     private static String getUrlByIdFromUserInput(Scanner sc) {
