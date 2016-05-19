@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ControlPanel/src/main/ControlPanel.iml" filepath="$PROJECT_DIR$/ControlPanel/src/main/ControlPanel.iml" />
       <module fileurl="file://$PROJECT_DIR$/Dashboard/Dashboard.iml" filepath="$PROJECT_DIR$/Dashboard/Dashboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Fabric/Fabric.iml" filepath="$PROJECT_DIR$/Fabric/Fabric.iml" />
       <module fileurl="file://$PROJECT_DIR$/Material/src/main/Material.iml" filepath="$PROJECT_DIR$/Material/src/main/Material.iml" />
       <module fileurl="file://$PROJECT_DIR$/Printer/src/main/Printer.iml" filepath="$PROJECT_DIR$/Printer/src/main/Printer.iml" />
       <module fileurl="file://$PROJECT_DIR$/SocketTransport/SocketTransport.iml" filepath="$PROJECT_DIR$/SocketTransport/SocketTransport.iml" />

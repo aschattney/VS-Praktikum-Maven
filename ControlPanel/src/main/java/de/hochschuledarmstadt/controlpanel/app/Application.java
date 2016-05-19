@@ -8,42 +8,30 @@ package de.hochschuledarmstadt.controlpanel.app;
 import com.sun.net.httpserver.HttpServer;
 import de.hochschuledarmstadt.client.ISocketClient;
 import de.hochschuledarmstadt.client.SocketClientFactory;
+import de.hochschuledarmstadt.component.IServer;
 import de.hochschuledarmstadt.config.Credential;
 import de.hochschuledarmstadt.config.CredentialParser;
-import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
-
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
+import de.hochschuledarmstadt.server.ServerSocketFactory;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 
 public class Application {
 
     private static final int DEFAULT_PRINTER_PORT = 3333;
     private static final int DEFAULT_MATERIAL_PORT = 5555;
+    private static final int DEFAULT_SERVER_PORT = 11000;
 
     private static final String DEFAULT_IP = "127.0.0.1";
-    public static final String MODULE_PRINTER = "printer";
+
+    private static final String MODULE_PRINTER = "printer";
     private static final String MODULE_MATERIAL = "material";
+
+    private static IServer server;
 
     public static void main(String[] args){
 
-        int restPort = 1111;
-
-        for (String command : args) {
-            try {
-                String[] pair = command.split("=");
-                if (pair[0].equals("port")) {
-                    restPort = Integer.parseInt(pair[1].trim());
-                    break;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
         // Build credentials. A Credential consists of the used protocol, ip adress and port
+        Credential serverCredential = CredentialParser.parse(args, Credential.PROTOCOL_TCP, DEFAULT_IP, DEFAULT_SERVER_PORT);
         Credential printerCredential = CredentialParser.parse(MODULE_PRINTER, args, Credential.PROTOCOL_TCP, DEFAULT_IP, DEFAULT_PRINTER_PORT);
         Credential materialCredential = CredentialParser.parse(MODULE_MATERIAL, args, Credential.PROTOCOL_TCP, DEFAULT_IP, DEFAULT_MATERIAL_PORT);
 
@@ -55,15 +43,26 @@ public class Application {
         PrintJobExecutor printJobExecutor = new PrintJobExecutor(System.out, printerClient, materialClient);
         Executors.newSingleThreadExecutor().submit(printJobExecutor);
 
+        MessageConsumer messageConsumer = new MessageConsumer(printerClient, materialClient, printJobExecutor);
+        ServerSocketFactory factory = new ServerSocketFactory(serverCredential, messageConsumer);
+
+        server = factory.buildServer();
+
+        Executors.newSingleThreadExecutor().submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    server.open();
+                    System.out.println("server open");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         // Transforms user input into message requests and sends those requests to the server
         ApplicationProcessor userInputProcessor = new ApplicationProcessor(System.in, System.out, printJobExecutor, materialClient);
-        //userInputProcessor.processSync();
-
-        URI baseUri = UriBuilder.fromUri("http://localhost/").port(restPort).build();
-        PrinterResource printerResource = new PrinterResource(printerClient, printJobExecutor);
-        MaterialResource materialResource = new MaterialResource(materialClient);
-        ResourceConfig config = new ResourceConfig().register(printerResource).register(materialResource); // interner aufbau vom rest-server
-        HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);
+        userInputProcessor.processSync();
 
     }
 

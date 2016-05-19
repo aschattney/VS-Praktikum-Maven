@@ -5,10 +5,12 @@ import java.nio.charset.Charset;
 public class PerformanceTest implements Runnable {
 
     private final String ipAndPort;
+    private final int printerId;
     private final Callback callback;
 
-    public PerformanceTest(String ipAndPort, Callback callback){
+    public PerformanceTest(String ipAndPort, int printerId, Callback callback){
         this.ipAndPort = ipAndPort;
+        this.printerId = printerId;
         this.callback = callback;
     }
 
@@ -16,7 +18,7 @@ public class PerformanceTest implements Runnable {
 
         long start = System.currentTimeMillis();
         long byteCount = 0;
-        PrinterService service = new PrinterService(ipAndPort);
+        PrinterService service = new PrinterService(ipAndPort, printerId);
         for (int i = 0 ; i < 2000; i++){
             try {
                 String response = service.requestPrinterStatus();

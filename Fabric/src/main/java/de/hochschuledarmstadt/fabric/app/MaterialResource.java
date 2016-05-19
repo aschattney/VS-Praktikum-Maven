@@ -1,4 +1,4 @@
-package de.hochschuledarmstadt.controlpanel.app;
+package de.hochschuledarmstadt.fabric.app;
 
 
 import com.google.gson.Gson;
@@ -8,32 +8,30 @@ import de.hochschuledarmstadt.model.request.PrintheadStatusRequest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.Map;
 
 @Path("material")
 public class MaterialResource {
 
-    private ISocketClient material;
+    private Map<Integer,ISocketClient> panelSockets;
 
-    public MaterialResource(ISocketClient material) {
-        this.material = material;
+    public MaterialResource(Map<Integer,ISocketClient> panelSockets) {
+        this.panelSockets = panelSockets;
     }
 
     @GET
-    @Path("/status")
+    @Path("{id}/status")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public String Status(){
+    public String Status(@PathParam("id") int id){
         Gson gson = new Gson();
         MaterialStatusRequest request = new MaterialStatusRequest();
         String message = gson.toJson(request);
         JSONObject jsonObject = null;
         try {
-            jsonObject = material.sendMessage(message);
+            jsonObject = panelSockets.get(id).sendMessage(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

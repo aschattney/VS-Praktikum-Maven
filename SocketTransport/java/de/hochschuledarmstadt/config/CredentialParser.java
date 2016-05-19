@@ -23,6 +23,9 @@ public class CredentialParser {
                 String m = pair[0];
                 String strCredentials = null;
 
+                if (module == null && pair.length > 1)
+                    continue;
+
                 if (module == null){
                     strCredentials = pair[0];
                 }else if(!m.equals(module))
@@ -31,12 +34,12 @@ public class CredentialParser {
                     strCredentials = pair[1];
 
                 String[] splittedCredentials = strCredentials.split("://");
-                String protocol = splittedCredentials[0];
+                String protocol = splittedCredentials[0].toUpperCase();
 
                 String[] ipAndProtocol = splittedCredentials[1].split(":");
                 String ip = ipAndProtocol[0];
                 int port = Integer.parseInt(ipAndProtocol[1]);
-
+                System.out.println(String.format("IP:%s, Port:%s, Protocol:%s", ip, port, protocol));
                 return new Credential(protocol, ip, port);
 
             }catch(Exception e){

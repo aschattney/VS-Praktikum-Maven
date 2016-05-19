@@ -6,8 +6,8 @@ import com.sun.jersey.api.client.WebResource;
 
 public class MaterialService extends HttpService {
 
-    public MaterialService(String ipAndPort) {
-        super(ipAndPort);
+    public MaterialService(String ipAndPort, int printerId) {
+        super(ipAndPort, printerId);
     }
 
     @Override
@@ -16,8 +16,8 @@ public class MaterialService extends HttpService {
     }
 
     @Override
-    protected String getHttpResource() {
-        return "material/status";
+    protected String getHttpResource(int printerId) {
+        return String.format("material/%s/status", printerId);
     }
 
     public String requestMaterialStatus() throws Exception {

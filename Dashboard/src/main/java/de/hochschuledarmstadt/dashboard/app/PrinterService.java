@@ -8,8 +8,8 @@ import com.sun.org.apache.xml.internal.serialize.Printer;
 
 public class PrinterService extends HttpService {
 
-    public PrinterService(String ipAndPort){
-        super(ipAndPort);
+    public PrinterService(String ipAndPort, int printerId){
+        super(ipAndPort, printerId);
     }
 
     @Override
@@ -18,8 +18,8 @@ public class PrinterService extends HttpService {
     }
 
     @Override
-    protected String getHttpResource() {
-        return "printer/status";
+    protected String getHttpResource(int printerId) {
+        return String.format("printer/%s/status", printerId);
     }
 
     public String requestPrinterStatus() throws Exception {

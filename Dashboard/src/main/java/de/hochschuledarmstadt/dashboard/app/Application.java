@@ -22,8 +22,9 @@ public class Application {
             switch (eingabe) {
                 case 1: {
                     try {
-                        String ipAndPort = getUrlByIdFromUserInput(sc);
-                        JobService jobService = new JobService(ipAndPort, "nail");
+                        int[] ids = getId(sc);
+                        String ipAndPort = idToUrlMap.get(ids[0]);
+                        JobService jobService = new JobService(ipAndPort, ids[1], "nail");
                         String response = jobService.sendJob();
                         System.out.println(response);
                     } catch (Exception e) {
@@ -33,8 +34,9 @@ public class Application {
                 }
                 case 2: {
                     try {
-                        String ipAndPort = getUrlByIdFromUserInput(sc);
-                        PrinterService printerService = new PrinterService(ipAndPort);
+                        int[] ids = getId(sc);
+                        String ipAndPort = idToUrlMap.get(ids[0]);
+                        PrinterService printerService = new PrinterService(ipAndPort, ids[1]);
                         String response = printerService.requestPrinterStatus();
                         System.out.println(response);
                     } catch (Exception e) {
@@ -44,8 +46,9 @@ public class Application {
                 }
                 case 3: {
                     try {
-                        String ipAndPort = getUrlByIdFromUserInput(sc);
-                        MaterialService materialService = new MaterialService(ipAndPort);
+                        int[] ids = getId(sc);
+                        String ipAndPort = idToUrlMap.get(ids[0]);
+                        MaterialService materialService = new MaterialService(ipAndPort, ids[1]);
                         String response = materialService.requestMaterialStatus();
                         System.out.println(response);
                     } catch (Exception e) {
@@ -64,9 +67,10 @@ public class Application {
     }
 
     private static void performanceTest() {
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+/*        ExecutorService executorService = Executors.newFixedThreadPool(2);
         for (int id = 1 ; id <= 2; id++){
-            executorService.submit(new PerformanceTest(idToUrlMap.get(id), new PerformanceTest.Callback() {
+            String ipAndPort = idToUrlMap.get(id);
+            executorService.submit(new PerformanceTest(ipAndPort, new PerformanceTest.Callback() {
 
                 public void onPerformanceTestCompleted(double duration, long byteCount) {
                     System.out.println(String.format("Dauer: %s, Anzahl: %s", duration, byteCount));
@@ -74,11 +78,7 @@ public class Application {
 
             }));
         }
-    }
-
-    private static String getUrlByIdFromUserInput(Scanner sc) {
-        int id = getId(sc);
-        return idToUrlMap.get(id);
+        */
     }
 
     private static void buildIdToUrlMap() {
@@ -93,12 +93,23 @@ public class Application {
         System.out.println("(4) Shutdown");
     }
 
-    private static int getId(Scanner sc) {
+    private static int[] getId(Scanner sc) {
         String s = getIdsAsString();
-        System.out.println(String.format("Printer available with id: (%s)", s));
-        System.out.print("Choose a printer id: ");
-        int id = sc.nextInt();
-        return id;
+        System.out.println(String.format("Fabrics available with id: (%s)", s));
+        System.out.print("Choose a fabric id: ");
+        int fabricId = sc.nextInt();
+        String ipAndPort = idToUrlMap.get(fabricId);
+        FabricService service = new FabricService(ipAndPort, fabricId);
+        try {
+            String response = service.execute();
+            System.out.println(String.format("Printer available in fabric %s with id: (%s)", fabricId, response));
+            System.out.print("Choose a printer id: ");
+            int id = sc.nextInt();
+            return new int[]{fabricId, id};
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static String getIdsAsString() {

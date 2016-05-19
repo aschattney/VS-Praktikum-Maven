@@ -9,21 +9,23 @@ public abstract class HttpService {
 
     public static final int TIMEOUT = 8000;
     private String ipAndPort;
+    private int printerId;
     private Client client;
 
-    public HttpService(String ipAndPort){
+    public HttpService(String ipAndPort, int printerId){
         this.ipAndPort = ipAndPort;
+        this.printerId = printerId;
         client = Client.create();
         client.setConnectTimeout(TIMEOUT);
         client.setReadTimeout(TIMEOUT);
     }
 
     protected abstract ClientResponse performHttpRequest(WebResource.Builder webResource);
-    protected abstract String getHttpResource();
+    protected abstract String getHttpResource(int printerId);
 
     protected String execute() throws Exception{
 
-        String url = String.format("%s/%s", ipAndPort, getHttpResource());
+        String url = String.format("%s/%s", ipAndPort, getHttpResource(printerId));
         WebResource webResource = client.resource(url);
         ClientResponse response = performHttpRequest(webResource.accept("application/json"));
 
