@@ -46,7 +46,8 @@ public class UdpServer implements IServer {
 
     @Override
     public void close() {
-        // do nothing, udp is not connection based
+        socket.close();
+        executorService.shutdown();
     }
 
     public static class Builder{

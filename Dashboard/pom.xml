@@ -10,6 +10,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.hochschuledarmstadt</groupId>
+            <artifactId>SocketTransport</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
             <version>1.19</version>
