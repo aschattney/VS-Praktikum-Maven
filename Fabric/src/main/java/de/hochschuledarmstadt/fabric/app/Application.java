@@ -39,6 +39,8 @@ public class Application {
 
     private void start(String[] args) {
 
+        registerShutdownHook();
+
         uri = readUriForRestFromCommandLine(args);
 
         List<Integer> ports = generateUniquePortsForSubModules(args);
@@ -50,8 +52,6 @@ public class Application {
 
         notifyDashboardFabricBootUpCompleted();
 
-        registerShutdownHook();
-
         Map<Integer, ISocketClient> panelClients = connectToSubModulesInFabric(ports);
 
         HttpServer server = createHttpServer(uri, panelClients);
@@ -62,8 +62,8 @@ public class Application {
     private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                notifyDashboardOfFabricShutdown();
                 killProcessesOfSubModules();
+                notifyDashboardOfFabricShutdown();
             }
         }));
     }

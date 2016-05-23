@@ -55,11 +55,11 @@ public class UdpSocketClient implements ISocketClient{
             socket.send(packetDataLength);
             socket.send( packet );
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (SocketException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

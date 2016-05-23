@@ -38,6 +38,7 @@ public class MessageConsumer implements IMessageConsumer{
             if (!map.containsKey(id)) {
                 map.put(id, new Credential(Credential.PROTOCOL_UDP, ip, port));
                 int localId = availableIds.get(0);
+                availableIds.remove(0);
                 localIdToUniqueIdMap.put(localId, id);
                 uniqeToLocalIdMap.put(id, localId);
             }
