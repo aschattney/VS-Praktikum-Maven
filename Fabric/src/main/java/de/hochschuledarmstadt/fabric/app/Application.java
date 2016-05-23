@@ -129,7 +129,7 @@ public class Application {
         List<Integer> ports = new ArrayList<Integer>();
         int seed = readSocketPortSeedFromCommandLine(args);
         for (int i = 0; i < AMOUNT_OF_PRINTER_PER_FABRIC; i++){
-            seed = spawnWholePrinter(seed);
+            seed = createExternalModuleProcesses(seed);
             ports.add(seed);
             seed = updateSeed(seed);
         }
@@ -140,7 +140,7 @@ public class Application {
         return seed + 5;
     }
 
-    private int spawnWholePrinter(int seed) {
+    private int createExternalModuleProcesses(int seed) {
         try {
             ProcessBuilder mpb = new ProcessBuilder("java", "-jar", findJarPathForModule("Material"), String.format("tcp://127.0.0.1:%s", seed));
             int materialPort = seed++;
