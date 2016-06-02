@@ -16,6 +16,8 @@ import java.util.Map;
 @Path("material")
 public class MaterialResource {
 
+    Gson gson = new Gson();
+
     private Map<Integer,ISocketClient> panelSockets;
 
     public MaterialResource(Map<Integer,ISocketClient> panelSockets) {
@@ -26,7 +28,6 @@ public class MaterialResource {
     @Path("{id}/status")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public String Status(@PathParam("id") int id){
-        Gson gson = new Gson();
         MaterialStatusRequest request = new MaterialStatusRequest();
         String message = gson.toJson(request);
         JSONObject jsonObject = null;

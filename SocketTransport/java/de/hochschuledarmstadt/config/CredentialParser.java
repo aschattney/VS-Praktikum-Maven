@@ -36,6 +36,10 @@ public class CredentialParser {
                 String[] splittedCredentials = strCredentials.split("://");
                 String protocol = splittedCredentials[0].toUpperCase();
 
+                if (!protocol.equals(Credential.PROTOCOL_TCP) || !protocol.equals(Credential.PROTOCOL_UDP)){
+                    continue;
+                }
+
                 String[] ipAndProtocol = splittedCredentials[1].split(":");
                 String ip = ipAndProtocol[0];
                 int port = Integer.parseInt(ipAndProtocol[1]);

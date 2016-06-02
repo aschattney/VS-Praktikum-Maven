@@ -17,33 +17,38 @@ import java.util.Map;
 @Path("printer")
 public class PrinterResource {
 
-    private Map<Integer,ISocketClient> panelSockets = new HashMap<Integer, ISocketClient>();
+    private Map<Integer, ISocketClient> panelSockets = new HashMap<Integer, ISocketClient>();
 
-    public PrinterResource(Map<Integer,ISocketClient> panelSockets) {
+    public PrinterResource(Map<Integer, ISocketClient> panelSockets) {
         this.panelSockets = panelSockets;
     }
+
+    private static final Object LOCK_STATUS = new Object();
+
+    private Gson gson = new Gson();
 
     @GET
     @Path("{id}/status")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public String Status(@PathParam("id") int id){
+    public String Status(@PathParam("id") int id) throws Exception {
         try {
-            Gson gson = new Gson();
             PrintheadStatusRequest request = new PrintheadStatusRequest();
             String message = gson.toJson(request);
             ISocketClient client = panelSockets.get(id);
-            JSONObject jsonObject = client.sendMessage(message);
-            return jsonObject.toString();
+            synchronized (LOCK_STATUS) {
+                JSONObject jsonObject = client.sendMessage(message);
+                return jsonObject.toString();
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     @POST
     @Path("{id}/job/{name}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public String Job(@PathParam("id") int id, @PathParam("name") String name){
+    public String Job(@PathParam("id") int id, @PathParam("name") String name) throws IOException {
         try {
             Gson gson = new Gson();
             PrintJobRequest printJobRequest = new PrintJobRequest(name);
@@ -53,10 +58,8 @@ public class PrinterResource {
             return jsonObject.toString();
         } catch (IOException e) {
             e.printStackTrace();
+            throw e;
         }
-
-        return null;
-
     }
 
 
