@@ -10,11 +10,6 @@ import java.util.*;
 
 public class Application {
 
-    private static final int SEND_PRINT_JOB = 1;
-    private static final int SEND_PRINTER_STATUS_REQUEST = 2;
-    private static final int SEND_MATERIAL_STATUS_REQUEST = 3;
-    private static final int SHUTDOWN = 4;
-
     private static final String DEFAULT_IP = "127.0.0.1";
     private static final int DEFAULT_PORT = 9999;
 
@@ -50,7 +45,7 @@ public class Application {
             e.printStackTrace();
         }
 
-        IApplicationProcessor processor = null;
+        IApplicationProcessor processor;
         if (test){
             processor = new TestProcessor(map, localIdToUniqueIdMap);
         }else{

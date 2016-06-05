@@ -1,18 +1,20 @@
 # VS-Praktikum-Maven
 
-# JAR Dateien
+# Für Aufgabe 1
+
+## JAR Dateien
 
 Befinden sich unter dem Pfad: **out/artifacts/`modulname`_jar/`modulname`.jar**
 
-## Module starten
+### Module starten
 
-### Modul Printer
+#### Modul Printer
 
 | TCP  | UDP |
 |---|---|
 |```java -jar Printer.jar tcp://ip:port```|```java -jar Printer.jar udp://ip:port```|
 
-### Modul Material
+#### Modul Material
 
 | TCP  | UDP |
 |---|---|
@@ -20,13 +22,13 @@ Befinden sich unter dem Pfad: **out/artifacts/`modulname`_jar/`modulname`.jar**
 
 `fill-level` beschreibt den Füllstand der Behälter beim Start des Moduls und gleichzeitig auch den maximal möglichen Füllstand
 
-### Modul ControlPanel
+#### Modul ControlPanel
 
 | TCP  | UDP |
 |---|---|
 |```java -jar ControlPanel.jar printer=tcp://ip:port material=tcp://ip:port```|```java -jar ControlPanel.jar printer=udp://ip:port material=udp://ip:port```|
 
-### Beispiel TCP
+#### Beispiel TCP
 
 ```
 java -jar Printer.jar tcp://127.0.0.1:5555
@@ -34,7 +36,7 @@ java -jar Material.jar tcp://127.0.0.1:6666
 java -jar ControlPanel.jar printer=tcp://127.0.0.1:5555 material=tcp://127.0.0.1:6666
 ```
 
-### Beispiel UDP
+#### Beispiel UDP
 
 ```
 java -jar Printer.jar udp://127.0.0.1:5555
@@ -42,7 +44,7 @@ java -jar Material.jar udp://127.0.0.1:6666
 java -jar ControlPanel.jar printer=udp://127.0.0.1:5555 material=udp://127.0.0.1:6666
 ```
 
-## Performancetest
+### Performancetest
 
 Bei jedem Modul das Argument `performancetest` anhängen.
 Der Füllstand bei Material wird damit automatisch auf 1 Milliarde festgesetzt.
@@ -54,3 +56,15 @@ java -jar Printer.jar tcp://127.0.0.1:5555 performancetest
 java -jar Material.jar tcp://127.0.0.1:6666 performancetest
 java -jar ControlPanel.jar printer=tcp://127.0.0.1:5555 material=tcp://127.0.0.1:6666 performancetest
 ```
+
+# Für Aufgabe 2
+
+## Applikationstest
+
+Befinden sich unter dem Pfad: **out/artifacts/`modulname`_jar/`modulname`.jar**
+
+### Fabrik starten
+java -jar Fabric.jar
+
+### Dashboard starten
+java -jar Dashboard.jar test
